@@ -25,8 +25,14 @@ void setup() {
   setupWiFiAndWebServer();
   initDisplay();  // Nur Touch initialisieren
   drawStaticLayout();
-  randomSeed(analogRead(0));
+   // 🔑 Zufallsgenerator initialisieren – robust über RTC-Zeit
+  String datum = getDatum();  // z. B. "17.06.2025"
+  String zeit  = getZeit();   // z. B. "00:19:13"
+  datum.replace(".", "");    // → "17062025"
+  zeit.replace(":", "");     // → "001913"
+  randomSeed((datum + zeit).toInt());
 
+  Serial.println("RTC-basiertes randomSeed gesetzt.");
  }
 
 void loop() {
