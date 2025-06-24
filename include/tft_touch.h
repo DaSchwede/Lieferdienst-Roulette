@@ -18,6 +18,8 @@ public:
     TS_Point getPoint();
     TS_Point getMappedPoint();
     bool isStartButtonTouched();
+    bool isBackButtonTouched();
+    bool isSettingsButtonTouched();
     Adafruit_ILI9341& getTFT();
 
 private:
@@ -28,6 +30,7 @@ private:
 
 void initDisplay();
 void drawStaticLayout();
+void drawSettingsScreen();
 extern TFTTouch tftTouch;
 
 

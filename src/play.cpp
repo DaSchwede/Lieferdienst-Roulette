@@ -4,8 +4,11 @@
 #include "rtc.h"
 #include <ArduinoJson.h>
 #include <vector>
+#include "app_state.h"
+
 
 extern TFTTouch tftTouch;
+extern bool wasTouchedLastFrame;
 
 String pickLieferdienstForToday() {
   String daten = loadLieferdienste();
@@ -67,23 +70,16 @@ void drawGameScreen(const String& dienstName) {
 }
 
 void handleGameTouch() {
-    static bool touchedLastFrame = false;
     bool nowTouched = tftTouch.touched();
 
-    if (nowTouched && !touchedLastFrame) {
-        TS_Point p = tftTouch.getMappedPoint();
-
-        int backBtnW = 100, backBtnH = 30;
-        int backX = (tftTouch.getTFT().width() - backBtnW) / 2;
-        int backY = 180;
-
-        if (p.x >= backX && p.x <= backX + backBtnW &&
-            p.y >= backY && p.y <= backY + backBtnH) {
-            Serial.println("Zurück-Button gedrückt!");
-            // → AppState zurücksetzen, falls verwendet
-            // z.B. setAppState(MAIN_MENU);
+    if (nowTouched && !wasTouchedLastFrame) {
+        if (tftTouch.isBackButtonTouched()) {
+            Serial.println("Zurueck-Button gedrueckt!");
+            currentState = MAIN_MENU;
+            drawStaticLayout();
         }
     }
 
-    touchedLastFrame = nowTouched;
+    wasTouchedLastFrame = nowTouched;
 }
+

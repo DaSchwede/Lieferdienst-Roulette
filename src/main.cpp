@@ -12,11 +12,10 @@
 #include "play.h"
 #include "app_state.h"
 
-AppState currentState = MAIN_MENU;
-
-
 bool wasTouchedLastFrame = false;
 
+// Forward declaration
+void drawSettingsScreen();
 
 void setup() {
   Serial.begin(115200);
@@ -25,7 +24,8 @@ void setup() {
   setupWiFiAndWebServer();
   initDisplay();  // Nur Touch initialisieren
   drawStaticLayout();
-   // 🔑 Zufallsgenerator initialisieren – robust über RTC-Zeit
+
+  // 🔑 Zufallsgenerator initialisieren – robust über RTC-Zeit
   String datum = getDatum();  // z. B. "17.06.2025"
   String zeit  = getZeit();   // z. B. "00:19:13"
   datum.replace(".", "");    // → "17062025"
@@ -33,7 +33,7 @@ void setup() {
   randomSeed((datum + zeit).toInt());
 
   Serial.println("RTC-basiertes randomSeed gesetzt.");
- }
+}
 
 void loop() {
   bool nowTouched = tftTouch.touched();
@@ -43,14 +43,24 @@ void loop() {
       String zufall = pickLieferdienstForToday();
       drawGameScreen(zufall);
       currentState = GAME_SCREEN;
+    } else if (tftTouch.isSettingsButtonTouched()) {
+      drawSettingsScreen();
+      currentState = SETTINGS_SCREEN;
     }
-  } else if (currentState == GAME_SCREEN) {
+  }
+
+  else if (currentState == GAME_SCREEN && nowTouched && !wasTouchedLastFrame) {
     handleGameTouch();
+  }
+
+  else if (currentState == SETTINGS_SCREEN && nowTouched && !wasTouchedLastFrame) {
+    if (tftTouch.isSettingsButtonTouched()) {
+      drawStaticLayout();
+      currentState = MAIN_MENU;
+    }
   }
 
   wasTouchedLastFrame = nowTouched;
   loopWebServer();
   delay(100);
 }
-
-
