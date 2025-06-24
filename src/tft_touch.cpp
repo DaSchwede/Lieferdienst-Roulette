@@ -40,7 +40,7 @@ void drawStaticLayout() {
     tft.setTextSize(3);
     tft.setCursor((tft.width() - 13 * 18) / 2, 95);   // „Lieferdienst“
     tft.print("Lieferdienst");
-    tft.setCursor((tft.width() - 9 * 18) / 2, 135);   // „Roulette“
+    tft.setCursor((tft.width() - 7 * 18) / 2, 135);   // „Oracel“
     tft.print("Roulette");
 
     // Zahnrad links oben (24x24)

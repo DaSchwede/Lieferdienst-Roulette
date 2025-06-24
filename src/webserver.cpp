@@ -6,7 +6,7 @@
 #include "rtc.h"
 #include <RTClib.h>
 
-const char* apSSID = "Lieferdienst-Roulette";
+const char* apSSID = "Lieferdienst-Oracel";
 const char* apPassword = "BME4877691";  // mind. 8 Zeichen!
 const IPAddress apIP(192, 168, 4, 1);
 const byte DNS_PORT = 53;
